@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { NovuEchoModule } from './echo/echo.module';
-import { MyWorkflows } from './echo/custom.step';
 import { UserModule } from './user/user.module';
+import { NovuEchoModule } from './echo/echo.module';
 
 @Module({
   imports: [NovuEchoModule, UserModule],
   controllers: [AppController],
-  providers: [AppService, MyWorkflows],
+  providers: [AppService],
 })
 export class AppModule {}

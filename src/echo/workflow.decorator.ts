@@ -1,5 +1,9 @@
 import { SetMetadata } from '@nestjs/common';
-import { WORKFLOW_HANDLER } from './echo.constants';
+import {
+  WORKFLOW_HANDLER,
+  WORKFLOW_INPUT,
+  WORKFLOW_PAYLOAD,
+} from './echo.constants';
 import { WorkflowOptions } from '@novu/echo';
 
 /**
@@ -26,4 +30,12 @@ export function Workflow<TPayloadSchema = any, TInputSchema = any>(
   };
 
   return SetMetadata(WORKFLOW_HANDLER, metadata);
+}
+
+export function PayloadSchema<T = any>(schema: T) {
+  return SetMetadata(WORKFLOW_PAYLOAD, schema);
+}
+
+export function InputSchema<T = any>(schema: T) {
+  return SetMetadata(WORKFLOW_INPUT, schema);
 }

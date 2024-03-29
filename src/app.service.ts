@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Workflow } from './echo/workflow.decorator';
+import { PayloadSchema, Workflow } from './echo/workflow.decorator';
 import { UserService } from './user/user.service';
 import { ExecuteInput } from '@novu/echo';
 
@@ -11,8 +11,9 @@ export class AppService {
     return 'Hello World!';
   }
 
-  @Workflow('onboard', {
-    payloadSchema: { properties: { userId: { type: 'string' } } },
+  @Workflow('onboard', { payloadSchema: { username: { type: 'string' } } })
+  @PayloadSchema({
+    properties: { userId: { type: 'string' }, promoCode: { type: 'string' } },
   })
   public async onboardWorkflow(
     event: ExecuteInput<{ userId: string }, unknown>,

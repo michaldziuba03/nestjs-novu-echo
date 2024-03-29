@@ -1,20 +1,17 @@
 import { Echo, Execute } from '@novu/echo';
+import { DiscoveryService, MetadataScanner, Reflector } from '@nestjs/core';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import {
-  DiscoveryService,
-  MetadataScanner,
-  ModuleRef,
-  Reflector,
-} from '@nestjs/core';
-import { ECHO_CLIENT, WORKFLOW_HANDLER } from './echo.constants';
+import { WORKFLOW_HANDLER } from './echo.constants';
 import { WorkflowMetadata } from './workflow.decorator';
+import { InjectNovuEcho } from './echo.decorator';
 
 @Injectable()
 export class WorkflowExplorer implements OnModuleInit {
   private readonly logger = new Logger('NovuEchoModule');
 
   constructor(
-    private readonly moduleRef: ModuleRef,
+    @InjectNovuEcho()
+    private readonly echo: Echo,
     private readonly discoveryService: DiscoveryService,
     private readonly metadataScanner: MetadataScanner,
     private readonly reflector: Reflector,
@@ -60,11 +57,8 @@ export class WorkflowExplorer implements OnModuleInit {
     handler: Execute<unknown, unknown>,
     instance: object,
   ) {
-    const echo = this.moduleRef.get<Echo>(ECHO_CLIENT);
     const exec = handler.bind(instance);
-
-    echo.workflow(metadata.id, exec, metadata.options);
-
-    this.logger.log(`Detected workflow: ${metadata.id}`);
+    this.echo.workflow(metadata.id, exec, metadata.options);
+    this.logger.log(`Discovered workflowId: '${metadata.id}'`);
   }
 }

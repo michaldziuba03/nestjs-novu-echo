@@ -1,21 +1,25 @@
 import { SetMetadata } from '@nestjs/common';
 import { WORKFLOW_HANDLER } from './echo.constants';
+import { WorkflowOptions } from '@novu/echo';
 
 /**
  * `@Workflow` decorator metadata
  */
 export interface WorkflowMetadata {
   id: string;
-  options?: object;
+  options?: WorkflowOptions<unknown, unknown>;
 }
 
 /**
- * Registers workflow handler.
+ * Define a new notification workflow.
  *
  * @param workflowId unique workflow id
  * @param options workflow options
  */
-export function Workflow(workflowId: string, options?: object) {
+export function Workflow<TPayloadSchema = any, TInputSchema = any>(
+  workflowId: string,
+  options?: WorkflowOptions<TPayloadSchema, TInputSchema>,
+) {
   const metadata: WorkflowMetadata = {
     id: workflowId,
     options: options || {},

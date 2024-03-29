@@ -11,13 +11,17 @@ export class AppService {
     return 'Hello World!';
   }
 
-  @Workflow('onboard')
-  public async onboardWorkflow(event: ExecuteInput<unknown, unknown>) {
+  @Workflow('onboard', {
+    payloadSchema: { properties: { userId: { type: 'string' } } },
+  })
+  public async onboardWorkflow(
+    event: ExecuteInput<{ userId: string }, unknown>,
+  ) {
     await event.step.email('hello-email', async () => {
-      const user = await this.userService.getUserById('2003');
+      const user = await this.userService.getUserById(event.payload.userId);
       return {
         body: 'Hello, ' + user.name,
-        subject: 'Welcome to our services',
+        subject: 'Welcome to our services, you are user with id: ' + user.id,
       };
     });
 

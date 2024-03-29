@@ -12,7 +12,7 @@ export class AppService {
   }
 
   @Workflow('onboard')
-  public async commentWorkflow(event: ExecuteInput<unknown, unknown>) {
+  public async onboardWorkflow(event: ExecuteInput<unknown, unknown>) {
     await event.step.email('hello-email', async () => {
       const user = await this.userService.getUserById('2003');
       return {

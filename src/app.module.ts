@@ -5,7 +5,14 @@ import { UserModule } from './user/user.module';
 import { NovuEchoModule } from './echo/echo.module';
 
 @Module({
-  imports: [NovuEchoModule, UserModule],
+  imports: [
+    NovuEchoModule.forRoot({
+      config: {
+        devModeBypassAuthentication: true,
+      },
+    }),
+    UserModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

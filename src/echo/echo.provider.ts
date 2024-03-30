@@ -1,5 +1,6 @@
+import type { ClientConfig } from '@novu/echo';
 import { Provider } from '@nestjs/common';
-import { ECHO_CLIENT } from './echo.constants';
+import { ECHO_CLIENT, ECHO_OPTIONS } from './echo.constants';
 import { Echo } from '@novu/echo';
 
 export function injectNovuEcho() {
@@ -8,11 +9,10 @@ export function injectNovuEcho() {
 
 export function createNovuEchoClient(): Provider {
   return {
-    //inject: [ECHO_OPTIONS],
+    inject: [ECHO_OPTIONS],
     provide: ECHO_CLIENT,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    useFactory(options: object) {
-      return new Echo({ devModeBypassAuthentication: true });
+    useFactory(options: ClientConfig) {
+      return new Echo(options);
     },
   };
 }

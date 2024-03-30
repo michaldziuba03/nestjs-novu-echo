@@ -1,17 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PayloadSchema, Workflow } from './echo/workflow.decorator';
 import { UserService } from './user/user.service';
-import { ExecuteInput } from '@novu/echo';
+import { Echo, ExecuteInput } from '@novu/echo';
+import { InjectNovuEcho } from './echo/echo.decorator';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    @InjectNovuEcho()
+    private readonly echo: Echo,
+  ) {}
 
   getHello(): string {
     return 'Hello World';
   }
 
-  private getMessage(user: { id: string, name: string }) {
+  private getMessage(user: { id: string; name: string }) {
     return `Hello, ${user.name}. Your id is: ${user.id}`;
   }
 

@@ -8,11 +8,25 @@ export class AppService {
   constructor(private readonly userService: UserService) {}
 
   getHello(): string {
-    return 'Hello World!';
+    return 'Hello World';
   }
 
-  @Workflow('onboard', { payloadSchema: { username: { type: 'string' } } })
+  private getMessage(user: { id: string, name: string }) {
+    return `Hello, ${user.name}. Your id is: ${user.id}`;
+  }
+
+  @Workflow('onboard', {
+    payloadSchema: {
+      type: 'object',
+      properties: { userId: { type: 'string' } },
+    },
+    inputSchema: {
+      type: 'object',
+      properties: { showButton: { type: 'boolean' } },
+    },
+  })
   @PayloadSchema({
+    type: 'object',
     properties: { userId: { type: 'string' }, promoCode: { type: 'string' } },
   })
   public async onboardWorkflow(
@@ -21,15 +35,15 @@ export class AppService {
     await event.step.email('hello-email', async () => {
       const user = await this.userService.getUserById(event.payload.userId);
       return {
-        body: 'Hello, ' + user.name,
-        subject: 'Welcome to our services, you are user with id: ' + user.id,
+        body: this.getMessage(user),
+        subject: 'Welcome message.',
       };
     });
 
-    await event.step.sms('sms', async () => {
-      const user = await this.userService.getUserById('2003');
+    await event.step.sms('hello-sms', async () => {
+      const user = await this.userService.getUserById(event.payload.userId);
       return {
-        body: 'Hello, ' + user.name,
+        body: this.getMessage(user),
       };
     });
   }

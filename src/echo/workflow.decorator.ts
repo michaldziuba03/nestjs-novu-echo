@@ -32,10 +32,22 @@ export function Workflow<TPayloadSchema = any, TInputSchema = any>(
   return SetMetadata(WORKFLOW_HANDLER, metadata);
 }
 
+/**
+ * Define a validation schema for workflow.
+ * Will override `payloadSchema` option if definied in `@Workflow` decorator.
+ *
+ * @param schema
+ */
 export function PayloadSchema<T = any>(schema: T) {
   return SetMetadata(WORKFLOW_PAYLOAD, schema);
 }
 
+/**
+ * Define a input schema for workflow.
+ * Will override `inputSchema` option if definied in `@Workflow` decorator.
+ *
+ * @param schema
+ */
 export function InputSchema<T = any>(schema: T) {
   return SetMetadata(WORKFLOW_INPUT, schema);
 }
